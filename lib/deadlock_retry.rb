@@ -71,12 +71,7 @@ module DeadlockRetry
 
       if ["MySQL", "Mysql2"].include?(self.connection.adapter_name)
         begin
-          mysql_version = self.connection.select_rows('show variables like \'version\'')[0][1]
-          cmd = if mysql_version < '5.5'
-            'show innodb status'
-          else
-            'show engine innodb status'
-          end
+          cmd = 'show engine innodb status'
           self.connection.select_value(cmd)
           DeadlockRetry.innodb_status_cmd = cmd
         rescue
